@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nelvor — Learning Search</title>
+  <meta
+    name="description"
+    content="Search with Nelvor across Mathematics, Physics, Astronomy, Computer Science, Web Development, Biology, Chemistry, World History, Philosophy, and Economics."
+  />
+
+  <!-- Site Name & Metadata for Google Search -->
+  <meta property="og:site_name" content="Nelvor" />
+  <meta property="og:title" content="Nelvor — Learning Search" />
+  <meta
+    property="og:description"
+    content="Search with Nelvor across 10 knowledge topics or enter a name to create community pages."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://portalnelvor.github.io/nelvorsearch.github.io/" />
+
+  <!-- Favicon (PNG >= 48x48 required by Google Search) -->
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="favicon.png" />
+
+  <!-- Structured Data to tell Google the Site Name is "Nelvor" -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Nelvor",
+      "alternateName": ["Nelvor — Learning Search", "Nelvor Search", "portalnelvor.github.io/nelvorsearch.github.io"],
+      "url": "https://portalnelvor.github.io/nelvorsearch.github.io/"
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Main layout */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 20px 30px;
+    }
+
+    /* Top search area occupies the full initial screen */
+    .hero-center {
+      width: 100%;
+      min-height: calc(100vh - 60px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sub-screen {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px 40px;
+    }
+
+    /* Site name "Nelvor" in black */
+    .logo {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 86px;
+      font-weight: bold;
+      letter-spacing: -2px;
+      color: #000000;
+      margin-bottom: 18px;
+      user-select: none;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    /* Classic gray panel */
+    .search-panel {
+      width: 100%;
+      max-width: 740px;
+      background-color: #eeeeee;
+      padding: 18px 24px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Text style matching the reference image */
+    .prompt-text {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 18px;
+      font-weight: normal;
+      color: #000000;
+      margin-bottom: 10px;
+    }
+
+    .search-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Search bar & name bar decoration */
+    .nexo-search-input {
+      width: 100%;
+      max-width: 440px;
+      height: 30px;
+      padding: 4px 8px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 16px;
+      color: #000000;
+      background-color: #ffffff;
+      border: 2px inset #cccccc;
+      outline: none;
+    }
+
+    .nexo-search-input:focus {
+      border-color: #666666;
+    }
+
+    .nexo-textarea {
+      width: 100%;
+      max-width: 520px;
+      min-height: 130px;
+      padding: 6px 8px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 16px;
+      color: #000000;
+      background-color: #ffffff;
+      border: 2px inset #cccccc;
+      outline: none;
+      resize: vertical;
+    }
+
+    .nexo-textarea:focus {
+      border-color: #666666;
+    }
+
+    /* Search results appear in place of the search bar */
+    .search-results {
+      display: none;
+      width: 100%;
+      max-width: 660px;
+      max-height: 320px;
+      overflow-y: auto;
+      background-color: #ffffff;
+      border: 1px solid #999999;
+      padding: 14px 18px;
+      text-align: left;
+      font-family: "Times New Roman", Times, serif;
+      color: #000000;
+    }
+
+    .results-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #cccccc;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .reset-link {
+      color: #000000;
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 14px;
+    }
+
+    .data-item {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #dddddd;
+    }
+
+    .data-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .data-title {
+      font-size: 19px;
+      font-weight: bold;
+      color: #000000;
+      margin-bottom: 3px;
+    }
+
+    .data-theme {
+      font-size: 13px;
+      color: #444444;
+      margin-bottom: 6px;
+    }
+
+    .data-text {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #000000;
+      margin-bottom: 6px;
+    }
+
+    .data-text:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Buttons + undecorated Dropdown */
+    .buttons-container {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Button style: slightly larger white rectangle */
+    .btn-retangulo {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #777777;
+      border-radius: 0;
+      padding: 8px 24px;
+      min-width: 150px;
+      height: 38px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn-retangulo:hover {
+      border-color: #000000;
+    }
+
+    .btn-retangulo:active {
+      background-color: #f4f4f4;
+    }
+
+    /* Community name input section below the search bar */
+    .signup-section {
+      width: 100%;
+      max-width: 740px;
+      background-color: #eeeeee;
+      margin-top: 12px;
+      padding: 16px 24px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .signup-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .signup-input {
+      max-width: 300px;
+      height: 38px;
+    }
+
+    .terms-notice {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #222222;
+      line-height: 1.4;
+      max-width: 580px;
+    }
+
+    .signup-status {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #000000;
+      line-height: 1.5;
+    }
+
+    .classic-link {
+      color: #0000ee;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .classic-link:visited {
+      color: #551a8b;
+    }
+
+    /* Hyperlinks area below both bars (without gray box) */
+    .links-box {
+      width: 100%;
+      max-width: 740px;
+      margin-top: 14px;
+      padding: 8px 16px;
+      text-align: center;
+    }
+
+    .links-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 20px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* Current Status Section placed way at the very bottom of the page */
+    .status-section {
+      width: 100%;
+      max-width: 440px;
+      margin-top: 100px;
+      margin-bottom: 24px;
+      text-align: center;
+      color: #000000;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .status-main-title {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 18px;
+      color: #000000;
+    }
+
+    .status-sub-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: #000000;
+    }
+
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+      margin: 0 auto;
+    }
+
+    .status-table td {
+      padding: 2px 6px;
+      border: none;
+      color: #000000;
+    }
+
+    .status-table td:first-child {
+      text-align: left;
+    }
+
+    .status-table td:last-child {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .status-total-row td {
+      font-weight: bold;
+      padding-top: 4px;
+    }
+
+    /* Forms & Info Screen */
+    .create-form-group {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .create-form-group label {
+      font-size: 16px;
+      margin-bottom: 5px;
+      color: #000000;
+    }
+
+    .create-form-group .nexo-search-input {
+      max-width: 100%;
+    }
+
+    .create-welcome {
+      font-size: 17px;
+      margin-bottom: 14px;
+      color: #000000;
+    }
+
+    .info-card {
+      width: 100%;
+      max-width: 680px;
+      background-color: #ffffff;
+      border: 1px solid #999999;
+      padding: 18px 22px;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .info-card h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #cccccc;
+      padding-bottom: 6px;
+      color: #000000;
+    }
+
+    .info-card h3 {
+      font-size: 17px;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      color: #000000;
+    }
+
+    .info-card p,
+    .info-card li {
+      font-size: 16px;
+      line-height: 1.55;
+      color: #000000;
+      margin-bottom: 8px;
+    }
+
+    .info-card ul {
+      padding-left: 22px;
+      margin-bottom: 10px;
+    }
+
+    .topics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-top: 8px;
+    }
+
+    .report-channel-box {
+      background-color: #f7f7f7;
+      border: 1px solid #bbbbbb;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* History Table */
+    .history-table-wrap {
+      width: 100%;
+      max-height: 360px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    .history-table th,
+    .history-table td {
+      border: 1px solid #999999;
+      padding: 6px 8px;
+      text-align: left;
+      color: #000000;
+    }
+
+    .history-table th {
+      background-color: #eeeeee;
+    }
+
+    footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 14px;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Search View -->
+  <main id="main-view">
+    <div class="hero-center">
+      <h1 class="logo" id="nelvor-logo" title="Click to return to the search bar">Nelvor</h1>
+
+      <!-- 1. Search Bar Panel -->
+      <div class="search-panel">
+        <p class="prompt-text">Search with Nelvor!</p>
+
+        <form class="search-form" id="search-form">
+          <!-- Search bar -->
+          <input
+            type="text"
+            id="search-input"
+            class="nexo-search-input"
+            autocomplete="off"
+            aria-label="Nelvor search bar"
+          />
+
+          <!-- Search results (appear here when the search bar hides) -->
+          <div id="search-results" class="search-results"></div>
+
+          <!-- White rectangle buttons + undecorated 10-topic Dropdown -->
+          <div class="buttons-container">
+            <button type="submit" class="btn-retangulo">Nelvor Search</button>
+            <button type="button" id="lucky-btn" class="btn-retangulo">Try My Luck!</button>
+
+            <select id="theme-dropdown" aria-label="Choose a topic">
+              <option value="">Choose a topic</option>
+              <option value="Mathematics">1. Mathematics</option>
+              <option value="Physics">2. Physics</option>
+              <option value="Astronomy">3. Astronomy</option>
+              <option value="Computer Science">4. Computer Science</option>
+              <option value="Web Development">5. Web Development</option>
+              <option value="Biology">6. Biology</option>
+              <option value="Chemistry">7. Chemistry</option>
+              <option value="World History">8. World History</option>
+              <option value="Philosophy">9. Philosophy</option>
+              <option value="Economics">10. Economics</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <!-- 2. Name / Community Pages Bar -->
+      <div class="signup-section">
+        <p class="prompt-text">Enter a name to create community pages:</p>
+
+        <form id="signup-form" class="signup-row">
+          <input
+            type="text"
+            id="signup-name-input"
+            class="nexo-search-input signup-input"
+            placeholder="Your name"
+            autocomplete="off"
+            aria-label="Your name"
+          />
+          <button type="submit" class="btn-retangulo">Enter</button>
+        </form>
+
+        <p class="terms-notice">
+          Community-created pages are not verified by Nelvor. By publishing, you agree to our
+          <a href="#terms" class="classic-link">Terms of Use</a>.
+        </p>
+
+        <div id="signup-status" class="signup-status"></div>
+      </div>
+
+      <!-- 3. Real Hyperlinks below both bars (without gray box and without Contact) -->
+      <div class="links-box" aria-label="Nelvor links">
+        <div class="links-grid">
+          <a href="#terms" class="classic-link">Terms of Use</a>
+          <a href="#report" class="classic-link">Report a Page</a>
+          <a href="#privacy" class="classic-link">Privacy Policy</a>
+          <a href="#disclaimer" class="classic-link">Disclaimer</a>
+          <a href="#random" id="random-nav-link" class="classic-link">Random Page</a>
+          <a href="#recent" class="classic-link">Recent Pages</a>
+          <a href="#topics" class="classic-link">Topics</a>
+          <a href="#create" class="classic-link">Create a Page</a>
+          <a href="#about" class="classic-link">About Nelvor</a>
+          <a href="#history" class="classic-link">History</a>
+          <a href="#guidelines" class="classic-link">Guidelines</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Current status: way at the bottom of the page -->
+    <section class="status-section" aria-label="Current status of Nelvor">
+      <h2 class="status-main-title">Current status:</h2>
+      <div id="nelvor-status-content"></div>
+    </section>
+  </main>
+
+  <!-- Create a Page Screen -->
+  <section id="create-page-view" class="sub-screen">
+    <h1 class="logo" id="create-logo" title="Back to Nelvor">Nelvor</h1>
+
+    <div class="search-panel">
+      <p id="create-welcome-msg" class="create-welcome"></p>
+      <p class="prompt-text"><strong>Create a Nelvor Page</strong></p>
+
+      <form id="create-page-form" class="search-form">
+        <div class="create-form-group">
+          <label for="page-title-input">Page Title:</label>
+          <input
+            type="text"
+            id="page-title-input"
+            class="nexo-search-input"
+            placeholder="Enter the page title"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="create-form-group">
+          <label for="page-topic-select">Topic:</label>
+          <select id="page-topic-select">
+            <option value="Mathematics">1. Mathematics</option>
+            <option value="Physics">2. Physics</option>
+            <option value="Astronomy">3. Astronomy</option>
+            <option value="Computer Science">4. Computer Science</option>
+            <option value="Web Development">5. Web Development</option>
+            <option value="Biology">6. Biology</option>
+            <option value="Chemistry">7. Chemistry</option>
+            <option value="World History">8. World History</option>
+            <option value="Philosophy">9. Philosophy</option>
+            <option value="Economics">10. Economics</option>
+          </select>
+        </div>
+
+        <div class="create-form-group">
+          <label for="page-content-input">Page Content:</label>
+          <textarea
+            id="page-content-input"
+            class="nexo-textarea"
+            placeholder="Write the text for your page..."
+          ></textarea>
+        </div>
+
+        <p class="terms-notice" style="margin-top: 0; margin-bottom: 12px;">
+          Community-created pages are not verified by Nelvor. By publishing, you agree to our
+          <a href="#terms" class="classic-link">Terms of Use</a>.
+        </p>
+
+        <div class="buttons-container">
+          <button type="submit" class="btn-retangulo">Create Page</button>
+          <button type="button" id="back-to-nelvor-btn" class="btn-retangulo">Back to Nelvor</button>
+        </div>
+
+        <div id="create-page-status" class="signup-status"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Info / Legal / Report / Topics / History Screen -->
+  <section id="info-view" class="sub-screen">
+    <h1 class="logo" id="info-logo" title="Back to Nelvor">Nelvor</h1>
+
+    <div class="search-panel">
+      <div id="info-content" class="info-card"></div>
+      <button type="button" id="info-back-btn" class="btn-retangulo">Back to Nelvor</button>
+    </div>
+  </section>
+
+  <footer>Nelvor — Learning Search</footer>
+
+  <script>
+    const NELVOR_BIRTH_DATE = new Date("2026-11-15T00:00:00");
+    const GITHUB_ISSUES_URL = "https://github.com/portalnelvor/nelvorsearch.github.io/issues";
+    // Optional: add a real maintainer email below if you want a mailto: channel alongside GitHub Issues
+    const CONTACT_EMAIL = "";
+
+    const topicsList = [
+      "Mathematics",
+      "Physics",
+      "Astronomy",
+      "Computer Science",
+      "Web Development",
+      "Biology",
+      "Chemistry",
+      "World History",
+      "Philosophy",
+      "Economics"
+    ];
+
+    /*
+      NELVOR PAGES DATABASE
+      - To mark a page as quarantined in the code, add: status: "reported page",
+      - To recover a reported page, delete: status: "reported page",
+    */
+    const nelvorData = [
+      // 1. Mathematics
+      {
+        theme: "Mathematics",
+        title: "What is a Prime Number?",
+        paragraphs: [
+          "A prime number is a whole number greater than 1 that has exactly two positive divisors: 1 and itself. For example, 2, 3, 5, 7, 11, and 13 are all prime numbers because you cannot divide them evenly by any other whole number.",
+          "The number 2 is unique because it is the only even prime number; every other even number can be divided by 2. Meanwhile, the number 1 is not considered prime because it only has one divisor.",
+          "Prime numbers are often called the building blocks of arithmetic. According to the Fundamental Theorem of Arithmetic, every whole number greater than 1 can be written as a unique product of prime numbers. Today, very large prime numbers are essential in modern cryptography to keep online communications and banking secure."
+        ]
+      },
+      {
+        theme: "Mathematics",
+        title: "The Fibonacci Sequence",
+        paragraphs: [
+          "The Fibonacci sequence is a famous series of numbers in which each number is the sum of the two preceding ones: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, and so on.",
+          "When you divide any number in the sequence by the number before it, the ratio gets closer and closer to approximately 1.618, known as the Golden Ratio.",
+          "This mathematical pattern frequently appears in nature, such as in sunflower seed spirals, pinecones, seashell curves, and the branching of trees."
+        ]
+      },
+      {
+        theme: "Mathematics",
+        title: "What is Pi (π) and the Pythagorean Theorem?",
+        paragraphs: [
+          "Pi (π) is a mathematical constant representing the ratio of a circle's circumference to its diameter. No matter how big or small a circle is, dividing its outer edge by its width always produces the same value.",
+          "Pi is an irrational number, meaning its decimal digits go on forever without repeating, starting with 3.14159265...",
+          "In geometry, the Pythagorean Theorem states that in any right-angled triangle, the square of the hypotenuse (the longest side) is equal to the sum of the squares of the other two sides: a² + b² = c²."
+        ]
+      },
+
+      // 2. Physics
+      {
+        theme: "Physics",
+        title: "Newton's Three Laws of Motion",
+        paragraphs: [
+          "Isaac Newton formulated three laws that describe how objects move in response to forces. The First Law (Inertia) states that an object at rest stays at rest, and an object in motion keeps moving at a constant velocity unless acted upon by an external force.",
+          "The Second Law relates force, mass, and acceleration with the famous equation F = m × a, meaning heavier objects require more force to accelerate at the same rate as lighter ones.",
+          "The Third Law states that for every action, there is an equal and opposite reaction—which explains how rockets push exhaust downward to propel themselves upward into space."
+        ]
+      },
+      {
+        theme: "Physics",
+        title: "What is Gravity?",
+        paragraphs: [
+          "Gravity is the fundamental force of attraction between all objects that have mass or energy. It is the force that keeps our feet on the ground, holds the Moon in orbit around Earth, and keeps planets circling the Sun.",
+          "The greater an object's mass, the stronger its gravitational pull, and the closer two objects are, the stronger the pull between them.",
+          "While Newton described gravity as an invisible force pulling objects together, Albert Einstein's General Theory of Relativity explained it as the curvature of space and time caused by massive objects."
+        ]
+      },
+      {
+        theme: "Physics",
+        title: "Thermodynamics and Conservation of Energy",
+        paragraphs: [
+          "Thermodynamics is the branch of physics that studies heat, work, temperature, and energy transfer. Its laws govern everything from car engines to stars.",
+          "The First Law of Thermodynamics states that energy cannot be created or destroyed; it can only change from one form to another, such as chemical energy in fuel turning into heat and motion.",
+          "The Second Law introduces entropy, explaining why heat naturally flows from hotter objects to colder ones and why no machine can be 100% efficient without losing some energy as heat."
+        ]
+      },
+
+      // 3. Astronomy
+      {
+        theme: "Astronomy",
+        title: "How Black Holes Form",
+        paragraphs: [
+          "A black hole is a region in space where gravity is so extraordinarily strong that nothing—not even light—can escape once it crosses the boundary called the event horizon.",
+          "Stellar black holes typically form when a very massive star runs out of nuclear fuel and collapses under its own gravity in a dramatic explosion called a supernova.",
+          "Supermassive black holes, millions or billions of times heavier than our Sun, sit at the centers of most large galaxies, including the Milky Way."
+        ]
+      },
+      {
+        theme: "Astronomy",
+        title: "The Solar System Explained",
+        paragraphs: [
+          "Our Solar System consists of the Sun at the center and eight major planets orbiting around it. The four inner rocky planets are Mercury, Venus, Earth, and Mars.",
+          "Beyond the asteroid belt lie the four outer giants: the gas giants Jupiter and Saturn, followed by the ice giants Uranus and Neptune.",
+          "Distant icy regions such as the Kuiper Belt hold dwarf planets like Pluto, along with millions of comets left over from the birth of the Solar System."
+        ]
+      },
+      {
+        theme: "Astronomy",
+        title: "What is a Light-Year?",
+        paragraphs: [
+          "Although it sounds like a measure of time, a light-year is actually a measure of distance used by astronomers to describe vast spaces between stars and galaxies.",
+          "It is defined as the total distance that light travels through empty space in one Earth year. Because light travels at about 299,792 kilometers per second, one light-year equals roughly 9.46 trillion kilometers.",
+          "For comparison, the nearest star to our Sun, Proxima Centauri, is about 4.24 light-years away, meaning its light takes over four years to reach our eyes."
+        ]
+      },
+
+      // 4. Computer Science
+      {
+        theme: "Computer Science",
+        title: "How Algorithms Work",
+        paragraphs: [
+          "An algorithm is a clear, step-by-step set of instructions designed to solve a specific problem or complete a task. Just like a recipe in a kitchen, an algorithm takes inputs, processes them through logical steps, and produces an output.",
+          "Computer scientists analyze algorithms to make software faster and use less memory. Even simple tasks like sorting names alphabetically or finding the shortest driving route rely on carefully designed algorithms.",
+          "For example, binary search finds an item in a sorted list of one million entries in at most 20 steps by repeatedly cutting the search area in half."
+        ]
+      },
+      {
+        theme: "Computer Science",
+        title: "Binary Code and Logic Gates",
+        paragraphs: [
+          "At the lowest hardware level, computers store and process all information—text, images, sound, and video—using binary code made up solely of 0s and 1s, called bits.",
+          "Groups of eight bits form a byte, which can represent 256 distinct values, such as individual letters, numbers, or punctuation symbols.",
+          "Inside a processor, billions of microscopic transistors act like tiny switches forming logic gates (AND, OR, NOT). By combining these gates, a computer can perform arithmetic and run complete programs."
+        ]
+      },
+      {
+        theme: "Computer Science",
+        title: "What is an Operating System?",
+        paragraphs: [
+          "An operating system (OS) is the core software layer that manages a computer's hardware and provides essential services for applications. Well-known examples include Linux, Windows, and macOS.",
+          "The OS schedules which programs get time on the CPU, allocates RAM safely so apps do not overwrite each other, and organizes files on storage drives.",
+          "Without an operating system, every application would have to communicate directly with keyboards, screens, disks, and network cards on its own."
+        ]
+      },
+
+      // 5. Web Development
+      {
+        theme: "Web Development",
+        title: "HTML, CSS, and JavaScript",
+        paragraphs: [
+          "Every standard web page is built on three core technologies: HTML (HyperText Markup Language) defines the structure and meaning of content, such as headings, paragraphs, inputs, and buttons.",
+          "CSS (Cascading Style Sheets) controls layout, colors, spacing, and typography, allowing a page to look clean and readable across different screen sizes.",
+          "JavaScript adds dynamic behavior and interactivity. When you click a button, filter a list, or update content without reloading the page, JavaScript is running in real time inside your browser."
+        ]
+      },
+      {
+        theme: "Web Development",
+        title: "How HTTP and Web Browsers Work",
+        paragraphs: [
+          "When you enter a web address, your browser uses the Domain Name System (DNS) to translate the readable domain name into a numerical IP address.",
+          "The browser then sends an HTTP or HTTPS request across the network to a web server, which responds with HTML, scripts, stylesheets, and media files.",
+          "Finally, the browser parses the HTML, applies styles, executes scripts, and paints pixels onto your screen in milliseconds."
+        ]
+      },
+      {
+        theme: "Web Development",
+        title: "What is the DOM?",
+        paragraphs: [
+          "The Document Object Model (DOM) is an in-memory tree representation of an HTML page created by the web browser when it loads a document.",
+          "Every HTML tag, attribute, and piece of text becomes a node inside that tree structure, organized from parent elements down to child elements.",
+          "Using JavaScript methods such as getElementById or createElement, developers can read, update, hide, or insert elements dynamically while the user interacts with the site."
+        ]
+      },
+
+      // 6. Biology
+      {
+        theme: "Biology",
+        title: "What is DNA?",
+        paragraphs: [
+          "DNA (deoxyribonucleic acid) is the molecule that carries the genetic instructions used in the growth, development, functioning, and reproduction of all known living organisms.",
+          "Shaped like a twisted ladder called a double helix, DNA stores biological information using four chemical bases: Adenine (A), Thymine (T), Cytosine (C), and Guanine (G).",
+          "Specific sequences of these bases form genes, which act as blueprints telling cells how to build the proteins needed for life."
+        ]
+      },
+      {
+        theme: "Biology",
+        title: "How Photosynthesis Works",
+        paragraphs: [
+          "Photosynthesis is the process by which green plants, algae, and certain bacteria convert sunlight, water, and carbon dioxide into glucose (sugar) and oxygen.",
+          "Inside plant cells, specialized structures called chloroplasts contain chlorophyll—the green pigment that absorbs light energy from the Sun.",
+          "Photosynthesis forms the foundation of almost every food chain on Earth and continuously replenishes the oxygen in our atmosphere."
+        ]
+      },
+      {
+        theme: "Biology",
+        title: "Cells: The Building Blocks of Life",
+        paragraphs: [
+          "Every living organism is made up of one or more cells, which are the smallest units capable of carrying out all basic functions of life.",
+          "Prokaryotic cells, such as bacteria, are small and lack a membrane-bound nucleus, while eukaryotic cells, found in plants, animals, and fungi, have a nucleus and specialized compartments.",
+          "Inside eukaryotic cells, mitochondria generate usable chemical energy (ATP), and ribosomes assemble proteins needed for survival and repair."
+        ]
+      },
+
+      // 7. Chemistry
+      {
+        theme: "Chemistry",
+        title: "The Periodic Table of Elements",
+        paragraphs: [
+          "Created by Dmitri Mendeleev in 1869 and expanded over time, the Periodic Table organizes all 118 known chemical elements by their atomic number—the number of protons in an atom's nucleus.",
+          "Elements placed in the same vertical column (group) share similar chemical properties because they have the same number of electrons in their outermost shell.",
+          "For example, the rightmost column contains the noble gases, such as helium, neon, and argon, which are famously stable and rarely react with other elements."
+        ]
+      },
+      {
+        theme: "Chemistry",
+        title: "Atoms, Molecules, and Chemical Bonds",
+        paragraphs: [
+          "An atom consists of a dense central nucleus made of positively charged protons and neutral neutrons, surrounded by a cloud of negatively charged electrons.",
+          "When atoms share or transfer electrons with one another, they form chemical bonds in order to reach a more stable energy state.",
+          "Two or more bonded atoms create a molecule. For instance, two hydrogen atoms bonded to one oxygen atom form a single molecule of water (H₂O)."
+        ]
+      },
+      {
+        theme: "Chemistry",
+        title: "Acids, Bases, and the pH Scale",
+        paragraphs: [
+          "The pH scale runs from 0 to 14 and measures how acidic or basic (alkaline) a water-based solution is, based on its concentration of hydrogen ions.",
+          "Pure water sits right in the middle at a neutral pH of 7. Substances with a pH below 7, such as lemon juice and vinegar, are acidic and taste sour.",
+          "Substances with a pH above 7, such as baking soda and soap, are basic and often feel slippery when dissolved in water."
+        ]
+      },
+
+      // 8. World History
+      {
+        theme: "World History",
+        title: "The Invention of the Printing Press",
+        paragraphs: [
+          "Around 1440 in Mainz, Germany, Johannes Gutenberg introduced a mechanical movable-type printing press that revolutionized how information was shared.",
+          "Before this invention, books had to be copied painstakingly by hand, making them scarce, expensive, and accessible only to a small elite.",
+          "Within decades, millions of printed books circulated across Europe, fueling the Renaissance, the Scientific Revolution, and widespread literacy."
+        ]
+      },
+      {
+        theme: "World History",
+        title: "Ancient Mesopotamia and Early Writing",
+        paragraphs: [
+          "Located between the Tigris and Euphrates rivers, Mesopotamia is often called the Cradle of Civilization because of its early cities, agriculture, and legal systems.",
+          "Around 3200 BCE, the Sumerians developed cuneiform, one of the earliest known systems of writing, pressing wedge-shaped marks into soft clay tablets.",
+          "Originally used to track grain harvests and trade, writing eventually preserved laws like the Code of Hammurabi, literature, and astronomical observations."
+        ]
+      },
+      {
+        theme: "World History",
+        title: "The Industrial Revolution",
+        paragraphs: [
+          "Beginning in Britain in the late 18th century, the Industrial Revolution transformed societies based on handcraft and agriculture into industrial economies.",
+          "New inventions such as mechanized textile looms, steam engines, railways, and iron-making techniques dramatically increased production capacity.",
+          "Over the 19th century, industrialization spread across Europe, North America, and the rest of the world, reshaping cities, transportation, and daily life."
+        ]
+      },
+
+      // 9. Philosophy
+      {
+        theme: "Philosophy",
+        title: "Socrates and the Socratic Method",
+        paragraphs: [
+          "Socrates (470–399 BCE) was a classical Greek philosopher who never wrote books of his own, yet deeply influenced Western thought through dialogues recorded by students like Plato.",
+          "Instead of lecturing, Socrates walked through Athens asking citizens probing questions about justice, courage, and wisdom.",
+          "This approach, known as the Socratic Method, uses cooperative questioning to uncover hidden assumptions and guide people toward clearer reasoning."
+        ]
+      },
+      {
+        theme: "Philosophy",
+        title: "What is Stoicism?",
+        paragraphs: [
+          "Founded in Athens by Zeno of Citium around 300 BCE, Stoicism is a practical philosophy focused on developing wisdom, self-control, and inner resilience.",
+          "Later thinkers such as Epictetus, Seneca, and the Roman Emperor Marcus Aurelius expanded Stoic ideas in letters and personal journals.",
+          "A central principle of Stoicism is distinguishing between what is within our control—our own choices and attitudes—and what lies outside our control."
+        ]
+      },
+      {
+        theme: "Philosophy",
+        title: "Epistemology: How Do We Know?",
+        paragraphs: [
+          "Epistemology is the branch of philosophy that investigates the nature, origin, and limits of human knowledge.",
+          "Philosophers in this field ask fundamental questions such as 'What makes a belief justified?' and 'How can we distinguish knowledge from mere opinion?'",
+          "Historically, rationalists argued that reason is the primary source of knowledge, whereas empiricists emphasized observation and sensory experience."
+        ]
+      },
+
+      // 10. Economics
+      {
+        theme: "Economics",
+        title: "Supply and Demand",
+        paragraphs: [
+          "Supply and demand are the two core forces that determine prices and quantities in a market economy. Supply is how much producers offer, while demand is how much consumers want to buy.",
+          "When demand rises while supply stays limited, buyers compete and prices tend to climb. Conversely, when supply exceeds demand, prices usually fall.",
+          "At the market equilibrium price, the quantity that consumers want to purchase matches the quantity that producers are willing to sell."
+        ]
+      },
+      {
+        theme: "Economics",
+        title: "What is Inflation?",
+        paragraphs: [
+          "Inflation is the general, sustained rise in the prices of goods and services across an economy over time.",
+          "As average prices increase, each unit of currency buys slightly less than before, gradually reducing purchasing power.",
+          "Central banks monitor inflation closely and use tools such as interest rates to keep prices predictable while supporting steady economic activity."
+        ]
+      },
+      {
+        theme: "Economics",
+        title: "Compound Interest Explained",
+        paragraphs: [
+          "Unlike simple interest—which is calculated only on the original starting amount—compound interest is calculated on both the initial principal and the accumulated interest from earlier periods.",
+          "Because interest earns additional interest over time, money saved or invested at a steady rate grows exponentially rather than in a straight line.",
+          "For this reason, starting early and giving investments time to compound has a major impact on long-term financial growth."
+        ]
+      }
+    ];
+
+    // ===== Local persistence (this browser only, via localStorage) =====
+    const COMMUNITY_STORAGE_KEY = "nelvor_community_pages_v1";
+    const QUARANTINE_STORAGE_KEY = "nelvor_quarantine_v1";
+    const MAX_SAVED_COMMUNITY_PAGES = 200;
+    const MAX_PAGE_CONTENT_CHARS = 20000;
+
+    function readStorage(key) {
+      try {
+        const raw = window.localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function writeStorage(key, value) {
+      try {
+        window.localStorage.setItem(key, JSON.stringify(value));
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function pageStorageKey(item) {
+      return item.theme + "||" + (item.originalTitle || item.title);
+    }
+
+    function isValidSavedPage(p) {
+      return (
+        p && typeof p === "object" &&
+        typeof p.title === "string" && p.title.length > 0 && p.title.length <= 300 &&
+        typeof p.theme === "string" && topicsList.includes(p.theme) &&
+        Array.isArray(p.paragraphs) && p.paragraphs.length > 0 &&
+        p.paragraphs.every((t) => typeof t === "string")
+      );
+    }
+
+    function liftExpiredQuarantine(item) {
+      if (item.status === "reported page" && item.quarantineUntil && item.quarantineUntil <= Date.now()) {
+        item.title = item.originalTitle || item.title;
+        delete item.status;
+        delete item.quarantineUntil;
+        delete item.reportReason;
+        delete item.originalTitle;
+      }
+    }
+
+    // Saves community pages and active quarantines. Returns true if everything was saved.
+    function persistState() {
+      const community = nelvorData
+        .filter((item) => item.isCommunity)
+        .slice(0, MAX_SAVED_COMMUNITY_PAGES);
+
+      const quarantines = {};
+      nelvorData.forEach((item) => {
+        if (!item.isCommunity && item.status === "reported page" && item.quarantineUntil) {
+          quarantines[pageStorageKey(item)] = {
+            quarantineUntil: item.quarantineUntil,
+            reportReason: item.reportReason || ""
+          };
+        }
+      });
+
+      const okPages = writeStorage(COMMUNITY_STORAGE_KEY, community);
+      const okQuarantine = writeStorage(QUARANTINE_STORAGE_KEY, quarantines);
+      return okPages && okQuarantine;
+    }
+
+    function restoreSavedState() {
+      const savedPages = readStorage(COMMUNITY_STORAGE_KEY);
+      if (Array.isArray(savedPages)) {
+        const restored = savedPages
+          .filter(isValidSavedPage)
+          .slice(0, MAX_SAVED_COMMUNITY_PAGES)
+          .map((p) => {
+            const clean = {
+              theme: p.theme,
+              title: p.title,
+              isCommunity: true,
+              paragraphs: p.paragraphs.slice()
+            };
+            if (p.status === "reported page" && Number(p.quarantineUntil) > 0) {
+              clean.status = "reported page";
+              clean.originalTitle = typeof p.originalTitle === "string" ? p.originalTitle : p.title;
+              clean.reportReason = typeof p.reportReason === "string" ? p.reportReason : "";
+              clean.quarantineUntil = Number(p.quarantineUntil);
+            }
+            return clean;
+          });
+        restored.forEach(liftExpiredQuarantine);
+        nelvorData.unshift(...restored);
+      }
+
+      const savedQuarantines = readStorage(QUARANTINE_STORAGE_KEY);
+      if (savedQuarantines && typeof savedQuarantines === "object") {
+        nelvorData.forEach((item) => {
+          if (item.isCommunity) return;
+          const saved = savedQuarantines[pageStorageKey(item)];
+          if (saved && Number(saved.quarantineUntil) > Date.now()) {
+            item.originalTitle = item.title;
+            item.status = "reported page";
+            item.title = "Sorry! Page reported";
+            item.reportReason = typeof saved.reportReason === "string" ? saved.reportReason : "";
+            item.quarantineUntil = Number(saved.quarantineUntil);
+          }
+        });
+      }
+
+      persistState(); // also clears expired quarantines from storage
+    }
+
+    restoreSavedState();
+
+    const mainView = document.getElementById("main-view");
+    const createPageView = document.getElementById("create-page-view");
+    const infoView = document.getElementById("info-view");
+    const infoContent = document.getElementById("info-content");
+
+    const nelvorLogo = document.getElementById("nelvor-logo");
+    const createLogo = document.getElementById("create-logo");
+    const infoLogo = document.getElementById("info-logo");
+
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById("search-input");
+    const searchResults = document.getElementById("search-results");
+    const luckyBtn = document.getElementById("lucky-btn");
+    const themeDropdown = document.getElementById("theme-dropdown");
+
+    const signupForm = document.getElementById("signup-form");
+    const signupNameInput = document.getElementById("signup-name-input");
+    const signupStatus = document.getElementById("signup-status");
+
+    const createWelcomeMsg = document.getElementById("create-welcome-msg");
+    const createPageForm = document.getElementById("create-page-form");
+    const pageTitleInput = document.getElementById("page-title-input");
+    const pageTopicSelect = document.getElementById("page-topic-select");
+    const pageContentInput = document.getElementById("page-content-input");
+    const createPageStatus = document.getElementById("create-page-status");
+    const backToNelvorBtn = document.getElementById("back-to-nelvor-btn");
+    const infoBackBtn = document.getElementById("info-back-btn");
+    const randomNavLink = document.getElementById("random-nav-link");
+    const nelvorStatusContent = document.getElementById("nelvor-status-content");
+
+    let currentMemberName = "";
+    let sessionSearchCount = 0;
+
+    function normalizeText(str) {
+      return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function escapeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function isPageReported(item) {
+      return item.status === "reported page";
+    }
+
+    function getDisplayTitle(item) {
+      return isPageReported(item) ? "Sorry! Page reported" : item.title;
+    }
+
+    function getQuarantineParagraphs(item) {
+      let hoursText = "48 hours";
+      if (item.quarantineUntil) {
+        const msLeft = Math.max(0, item.quarantineUntil - Date.now());
+        const hoursLeft = Math.ceil(msLeft / (1000 * 60 * 60));
+        hoursText = `${hoursLeft} hour${hoursLeft === 1 ? "" : "s"} remaining of 48-hour quarantine`;
+      }
+      return [
+        `This page has been reported and placed in a 48-hour quarantine (${hoursText}).`
+      ];
+    }
+
+    // Real live statistics of Nelvor
+    function updateCurrentStatus() {
+      const now = new Date();
+      const diffMs = Math.max(0, now - NELVOR_BIRTH_DATE);
+      const ageDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      const totalPages = nelvorData.length;
+      const reportedCount = nelvorData.filter((p) => isPageReported(p)).length;
+      const activePages = totalPages - reportedCount;
+      const communityCount = nelvorData.filter((p) => p.isCommunity).length;
+      const totalParagraphs = nelvorData.reduce((sum, p) => sum + p.paragraphs.length, 0);
+
+      const totalWords = nelvorData.reduce((sum, p) => {
+        const text = `${p.title} ${p.paragraphs.join(" ")}`.trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        return sum + words;
+      }, 0);
+
+      const dbBytes = new Blob([JSON.stringify(nelvorData)]).size;
+      const htmlBytes = new Blob([document.documentElement.outerHTML]).size;
+      const avgPageBytes = totalPages > 0 ? Math.round(dbBytes / totalPages) : 0;
+      const totalLinks = document.querySelectorAll("a").length;
+
+      function formatKB(bytes) {
+        return (bytes / 1024).toFixed(1) + " KB";
+      }
+
+      nelvorStatusContent.innerHTML = `
+        <div class="status-sub-title">Web Page Statistics</div>
+        <table class="status-table">
+          <tr><td>Site Age (since Nov 15, 2026)</td><td>${ageDays} day${ageDays === 1 ? "" : "s"}</td></tr>
+          <tr><td>Number of Pages Indexed</td><td>${totalPages}</td></tr>
+          <tr><td>Number of Active Pages</td><td>${activePages}</td></tr>
+          <tr><td>Number of Topics</td><td>${topicsList.length}</td></tr>
+          <tr><td>Number of Community Pages</td><td>${communityCount}</td></tr>
+          <tr><td>Number of Reported Pages</td><td>${reportedCount}</td></tr>
+          <tr><td>Number of Paragraphs</td><td>${totalParagraphs}</td></tr>
+          <tr><td>Number of Words</td><td>${totalWords.toLocaleString("en-US")}</td></tr>
+          <tr><td>Number of Links on Page</td><td>${totalLinks}</td></tr>
+          <tr><td>Searches This Session</td><td>${sessionSearchCount}</td></tr>
+        </table>
+
+        <div class="status-sub-title">Storage Statistics</div>
+        <table class="status-table">
+          <tr><td>Average Size per Page</td><td>${formatKB(avgPageBytes)}</td></tr>
+          <tr><td>Tracking Cookies Used</td><td>0</td></tr>
+          <tr class="status-total-row"><td>Knowledge Database Size</td><td>${formatKB(dbBytes)}</td></tr>
+          <tr class="status-total-row"><td>Total Site Size (HTML + Data)</td><td>${formatKB(htmlBytes)}</td></tr>
+        </table>
+      `;
+    }
+
+    function filterData(query, selectedTheme) {
+      const cleanQuery = normalizeText(query.trim());
+
+      return nelvorData.filter((item) => {
+        const matchesTheme = !selectedTheme || item.theme === selectedTheme;
+        if (!matchesTheme) return false;
+
+        if (!cleanQuery) return true;
+
+        const searchableText = isPageReported(item)
+          ? `${item.theme} Sorry! Page reported quarantine`
+          : `${item.theme} ${item.title} ${item.paragraphs.join(" ")}`;
+
+        const fullContent = normalizeText(searchableText);
+        return cleanQuery.split(/\s+/).every((word) => fullContent.includes(word));
+      });
+    }
+
+    function showResults(list, searchDescription) {
+      searchInput.style.display = "none";
+      searchResults.style.display = "block";
+
+      let html = `
+        <div class="results-header-info">
+          <span>${escapeHTML(searchDescription)} (${list.length} result${list.length === 1 ? "" : "s"})</span>
+          <button type="button" class="reset-link" onclick="showSearchBar()">New search</button>
+        </div>
+      `;
+
+      if (list.length === 0) {
+        html += `<p class="data-text">No information found for that query. Try another keyword or choose a topic from the dropdown.</p>`;
+      } else {
+        list.forEach((item) => {
+          const title = getDisplayTitle(item);
+          const paragraphs = isPageReported(item) ? getQuarantineParagraphs(item) : item.paragraphs;
+          const statusLabel = isPageReported(item) ? " | 48-hour quarantine" : "";
+
+          html += `
+            <div class="data-item">
+              <div class="data-title">${escapeHTML(title)}</div>
+              <div class="data-theme">Topic: ${escapeHTML(item.theme)}${item.isCommunity ? " (Community Page)" : ""}${escapeHTML(statusLabel)}</div>
+              ${paragraphs.map((p) => `<p class="data-text">${escapeHTML(p)}</p>`).join("")}
+            </div>
+          `;
+        });
+      }
+
+      searchResults.innerHTML = html;
+      searchResults.scrollTop = 0;
+      updateCurrentStatus();
+    }
+
+    function showSearchBar() {
+      searchResults.style.display = "none";
+      searchInput.style.display = "block";
+      searchInput.value = "";
+      themeDropdown.value = "";
+      if (window.location.hash) {
+        history.pushState(null, "", window.location.pathname + window.location.search);
+      }
+      searchInput.focus();
+    }
+
+    function runNormalSearch() {
+      sessionSearchCount += 1;
+      const query = searchInput.value.trim();
+      const theme = themeDropdown.value;
+      const matches = filterData(query, theme);
+
+      let desc = "Search results";
+      if (query && theme) {
+        desc = `Results for "${query}" in ${theme}`;
+      } else if (query) {
+        desc = `Results for "${query}"`;
+      } else if (theme) {
+        desc = `Topic: ${theme}`;
+      } else {
+        desc = "All available topics on Nelvor";
+      }
+
+      showResults(matches, desc);
+    }
+
+    function showScreen(screen) {
+      mainView.style.display = screen === "main" ? "flex" : "none";
+      createPageView.style.display = screen === "create" ? "flex" : "none";
+      infoView.style.display = screen === "info" ? "flex" : "none";
+      window.scrollTo(0, 0);
+    }
+
+    function openCreatePageScreen() {
+      if (currentMemberName) {
+        createWelcomeMsg.textContent = `Welcome, ${currentMemberName}! You can create community pages below.`;
+      } else {
+        createWelcomeMsg.textContent = "Publish a new community page to Nelvor.";
+      }
+      createPageStatus.textContent = "";
+      showScreen("create");
+      pageTitleInput.focus();
+    }
+
+    function returnToMain(clearHash = true) {
+      if (clearHash && window.location.hash) {
+        history.pushState(null, "", window.location.pathname + window.location.search);
+      }
+      showScreen("main");
+      updateCurrentStatus();
+    }
+
+    function openTopicFromLink(topic) {
+      showScreen("main");
+      searchInput.value = "";
+      themeDropdown.value = topic;
+      runNormalSearch();
+    }
+
+    function openSinglePageByIndex(index) {
+      const item = nelvorData[index];
+      if (!item) return;
+      showScreen("main");
+      const label = isPageReported(item)
+        ? "Sorry! Page reported"
+        : `${item.title} — ${item.theme}`;
+      showResults([item], label);
+    }
+
+    function buildIssueUrl(title, reason, details) {
+      const issueTitle = `[Page Report] ${reason}: ${title}`;
+      const issueBody =
+        `Reported Page: ${title}\n` +
+        `Reason: ${reason}\n` +
+        `Site URL: ${window.location.origin}${window.location.pathname}\n\n` +
+        `Details:\n${details}`;
+
+      return `${GITHUB_ISSUES_URL}/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
+    }
+
+    function openInfoPage(type) {
+      let html = "";
+
+      if (type === "terms") {
+        html = `
+          <h2>Terms of Use</h2>
+          <p><strong>Effective Date:</strong> November 2026</p>
+          <p>Welcome to <strong>Nelvor — Learning Search</strong>. By accessing this website or creating community pages, you agree to these Terms of Use. If you do not agree, please do not use this site.</p>
+
+          <h3>1. Responsible Party</h3>
+          <p>This website is operated and maintained by <strong>portalnelvor</strong>.</p>
+
+          <h3>2. Minimum Age</h3>
+          <p>You must be at least <strong>13 years old</strong> (or the minimum age required by applicable law in your country to use online services without parental consent) to use Nelvor or create community pages.</p>
+
+          <h3>3. Nature of the Service</h3>
+          <p>Nelvor is an educational search directory and knowledge reference hosted as a static site on GitHub Pages. Community-created pages are saved only in the browser of the person who creates them (using the browser&rsquo;s local storage). They are not uploaded to any Nelvor server and are not visible to other visitors unless formally published to the repository by the site maintainer. Clearing your browser data for this site deletes them.</p>
+
+          <h3>4. Content License & Ownership</h3>
+          <p>By creating or submitting any text on Nelvor, you represent and warrant that the text is your own original work (or that you hold all necessary rights to publish it) and does not infringe any third-party copyrights or rights. You grant Nelvor (<strong>portalnelvor</strong>) a non-exclusive, worldwide, royalty-free license to display, reproduce, and make that content available on the website.</p>
+
+          <h3>5. User Responsibility & Prohibited Content</h3>
+          <p>Users are solely responsible for any content they write or publish. Nelvor does not pre-screen, verify, fact-check, or endorse user-submitted content. You may not submit:</p>
+          <ul>
+            <li><strong>Copyright Infringement & Plagiarism:</strong> Content copied from third-party websites, books, or encyclopedias without authorization.</li>
+            <li><strong>Defamation & Harassment:</strong> False, defamatory, abusive, threatening, or harassing statements about any person or organization.</li>
+            <li><strong>Unlawful or Harmful Material:</strong> Spam, malware, deceptive claims, or illegal content.</li>
+          </ul>
+
+          <h3>6. Sole Official Channel for Reports & Removal Requests</h3>
+          <p><strong>GitHub Issues is the sole official contact channel</strong> for page reports, copyright/DMCA takedown notices, defamation claims, and removal requests:
+          <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="classic-link">${GITHUB_ISSUES_URL}</a> (also accessible via our <a href="#report" class="classic-link">Report a Page</a> screen).</p>
+
+          <h3>7. No Warranties & Limitation of Liability</h3>
+          <p>Nelvor is provided "as is" and "as available" without warranties of any kind, express or implied. To the fullest extent permitted by law, Nelvor and <strong>portalnelvor</strong> shall not be liable for any direct, indirect, or incidental damages arising from the use of this website or reliance on its content.</p>
+
+          <h3>8. Governing Law & Jurisdiction</h3>
+          <p>These Terms of Use are governed by the laws of the Federative Republic of Brazil, without regard to conflict-of-law principles. Any disputes arising out of or relating to the use of Nelvor shall be submitted to the competent courts of Brazil, except where mandatory consumer or local laws require otherwise.</p>
+
+          <h3>9. Changes to These Terms</h3>
+          <p>These Terms of Use may be updated at any time without prior notice. Continued use of Nelvor after changes constitutes acceptance of the revised terms.</p>
+        `;
+      } else if (type === "privacy") {
+        html = `
+          <h2>Privacy Policy</h2>
+          <p><strong>Effective Date:</strong> November 2026</p>
+          <p>Nelvor — Learning Search is designed to minimize data handling. Please read carefully how data is handled by Nelvor and by our hosting provider:</p>
+
+          <h3>1. Responsible Party & Contact Channel</h3>
+          <p><strong>Responsible Party / Data Controller:</strong> <strong>portalnelvor</strong>.<br>
+          <strong>Official Contact Channel:</strong> <strong>GitHub Issues</strong> (<a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="classic-link">${GITHUB_ISSUES_URL}</a>) is the sole official channel for privacy inquiries or data-related requests.</p>
+
+          <h3>2. Data Handled by Nelvor</h3>
+          <ul>
+            <li><strong>No Direct Data Collection:</strong> Nelvor itself does not collect, store, profile, or sell personal data on any Nelvor server or database.</li>
+            <li><strong>No Tracking Cookies:</strong> Nelvor does not set advertising cookies, analytics trackers, or cross-site tracking scripts.</li>
+            <li><strong>Saved in Your Browser Only:</strong> Community pages you create and your local report actions are saved in your own browser (local storage, which is not a cookie) so they remain after you reload or close the tab. This data stays on your device, is not sent to any Nelvor server, and is not visible to other visitors. You can delete it at any time by clearing this site&rsquo;s data in your browser settings.</li>
+            <li><strong>Not Saved:</strong> Your search queries and the name you type to create pages are kept only in memory during your visit and are not saved.</li>
+          </ul>
+
+          <h3>3. Hosting Provider Logs (GitHub Pages)</h3>
+          <p>Nelvor does not collect data directly, <strong>however, our hosting provider (GitHub, Inc. / GitHub Pages) may automatically collect and log technical access data</strong> when you visit this website. This technical data may include your <strong>IP address, browser type and version (User-Agent), operating system, referring URL, requested page, and date/time of access</strong> for security, DDoS protection, reliability, and legal compliance under GitHub's Privacy Statement.</p>
+
+          <h3>4. External Report Channel (GitHub Issues)</h3>
+          <p>If you choose to submit an official report or inquiry using our GitHub Issues channel, any information you post there is processed and publicly visible on GitHub subject to GitHub's Terms of Service and Privacy Policy.</p>
+
+          <h3>5. Data Subject Rights (Including LGPD, Where Applicable)</h3>
+          <p>Although Nelvor is intended for an international audience and does not store personal data on its own servers, if you are located in Brazil or otherwise protected by the Brazilian General Data Protection Law (<strong>LGPD — Law No. 13.709/2018</strong>) or similar data protection laws, you may exercise applicable rights—such as confirmation of processing, access, correction, anonymization, or deletion of personal data—regarding any submission made via GitHub Issues by contacting <strong>portalnelvor</strong> through the official <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="classic-link">GitHub Issues</a> channel (or directly with GitHub regarding technical server access logs).</p>
+        `;
+      } else if (type === "disclaimer") {
+        html = `
+          <h2>Disclaimer</h2>
+          <ul>
+            <li><strong>Educational & Informational Purposes Only:</strong> All built-in articles and community-created pages on Nelvor — Learning Search are provided strictly for general educational and informational purposes.</li>
+            <li><strong>No Official Verification:</strong> Content on Nelvor—especially community-submitted pages—is not officially reviewed, peer-reviewed, or guaranteed to be accurate, complete, or up to date.</li>
+            <li><strong>Not Professional Advice:</strong> Nothing on Nelvor constitutes medical, legal, financial, scientific, or other professional advice, nor does it substitute for consultation with a qualified professional. Always seek qualified professional guidance before acting on information found online.</li>
+            <li><strong>External Links:</strong> Nelvor does not control and is not responsible for the content, accuracy, availability, or privacy practices of any external websites or third-party links (such as GitHub or external resources), if any are referenced or used.</li>
+          </ul>
+        `;
+      } else if (type === "about") {
+        html = `
+          <h2>About Nelvor</h2>
+          <p><strong>Nelvor — Learning Search</strong> is a classic, lightweight search and educational knowledge project operated by <strong>portalnelvor</strong> and inspired by the simplicity of early web search engines.</p>
+          <p>You can search across 10 core knowledge topics—including Mathematics, Physics, Astronomy, Computer Science, and Philosophy—or enter a name to create community pages that are saved in your own browser.</p>
+        `;
+      } else if (type === "guidelines") {
+        html = `
+          <h2>Community Writing Guidelines</h2>
+          <p>Follow these short tips to write a clear, helpful page without plagiarism:</p>
+          <ul>
+            <li><strong>Write in Your Own Words:</strong> Never copy and paste text from other websites or encyclopedias.</li>
+            <li><strong>Use Clear Titles:</strong> Choose a descriptive title that tells readers what the page is about.</li>
+            <li><strong>Keep Paragraphs Organized:</strong> Break explanations into short, readable paragraphs with accurate examples.</li>
+            <li><strong>Stay Respectful and On-Topic:</strong> Pick the matching category and keep content educational and constructive.</li>
+          </ul>
+        `;
+      } else if (type === "topics") {
+        html = `
+          <h2>Topics</h2>
+          <p>Select any category below to view all pages in that topic:</p>
+          <div class="topics-list">
+            ${topicsList
+              .map(
+                (topic) =>
+                  `<a href="#topic-${encodeURIComponent(topic)}" class="classic-link">${escapeHTML(topic)}</a>`
+              )
+              .join("")}
+          </div>
+        `;
+      } else if (type === "history") {
+        html = `
+          <h2>History — All Pages on Nelvor</h2>
+          <p>Click any page name below to open it:</p>
+          <div class="history-table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Page Name</th>
+                  <th>Topic</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${nelvorData
+                  .map((item, idx) => {
+                    const displayTitle = getDisplayTitle(item);
+                    const statusText = isPageReported(item)
+                      ? "48h Quarantine"
+                      : item.isCommunity
+                        ? "Community"
+                        : "Active";
+
+                    return `
+                      <tr>
+                        <td>${idx + 1}</td>
+                        <td><a href="#page-${idx}" class="classic-link">${escapeHTML(displayTitle)}</a></td>
+                        <td>${escapeHTML(item.theme)}</td>
+                        <td>${escapeHTML(statusText)}</td>
+                      </tr>
+                    `;
+                  })
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (type === "report") {
+        const reportableOptions = nelvorData
+          .map((item, idx) => {
+            if (isPageReported(item)) return "";
+            return `<option value="${idx}">${escapeHTML(item.title)} (${escapeHTML(item.theme)})</option>`;
+          })
+          .filter(Boolean)
+          .join("");
+
+        html = `
+          <h2>Report a Page</h2>
+          <div class="report-channel-box">
+            <strong>How reporting works on Nelvor:</strong>
+            Submitting the form below immediately places the page into a local <strong>48-hour quarantine</strong> ("Sorry! Page reported") in your browser <strong>and</strong> generates a direct link to send an official report to <strong>portalnelvor</strong>.<br>
+            <strong>GitHub Issues is the sole official contact channel</strong> for copyright claims (DMCA), defamation, or permanent removal requests:
+            <a href="${GITHUB_ISSUES_URL}/new" target="_blank" rel="noopener noreferrer" class="classic-link">Official Report Channel (GitHub Issues)</a>.
+          </div>
+
+          <form id="report-form" class="search-form" style="align-items: flex-start; margin-top: 10px;">
+            <div class="create-form-group">
+              <label for="report-page-select">Select Page to Report:</label>
+              <select id="report-page-select">
+                ${reportableOptions || '<option value="">All pages are currently reported</option>'}
+              </select>
+            </div>
+            <div class="create-form-group">
+              <label for="report-reason-select">Reason:</label>
+              <select id="report-reason-select">
+                <option value="Copyright Infringement / DMCA">Copyright Infringement / DMCA</option>
+                <option value="Defamation">Defamation / False statements</option>
+                <option value="Plagiarism">Plagiarism / Copied content</option>
+                <option value="Spam">Spam or advertising</option>
+                <option value="Inaccurate">Inaccurate or misleading</option>
+                <option value="Inappropriate">Inappropriate content</option>
+              </select>
+            </div>
+            <div class="create-form-group">
+              <label for="report-details-input">Details (required for official review):</label>
+              <textarea id="report-details-input" class="nexo-textarea" placeholder="Explain the copyright, defamation, or content issue..."></textarea>
+            </div>
+            <button type="submit" class="btn-retangulo">Submit Report</button>
+            <div id="report-status" class="signup-status"></div>
+          </form>
+        `;
+      }
+
+      infoContent.innerHTML = html;
+      showScreen("info");
+
+      if (type === "report") {
+        const reportForm = document.getElementById("report-form");
+        const reportPageSelect = document.getElementById("report-page-select");
+        const reportReasonSelect = document.getElementById("report-reason-select");
+        const reportDetailsInput = document.getElementById("report-details-input");
+        const reportStatus = document.getElementById("report-status");
+
+        reportForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const idxStr = reportPageSelect.value;
+          const reason = reportReasonSelect.value;
+          const details = reportDetailsInput.value.trim();
+
+          if (idxStr === "") {
+            reportStatus.textContent = "No active page selected to report.";
+            return;
+          }
+          if (!details) {
+            reportStatus.textContent = "Please enter details explaining why you are reporting this page.";
+            reportDetailsInput.focus();
+            return;
+          }
+
+          const idx = Number(idxStr);
+          const targetPage = nelvorData[idx];
+          if (!targetPage) return;
+
+          const originalTitle = targetPage.title;
+
+          // Quarantine page locally for 48 hours and save internally as "reported page"
+          targetPage.originalTitle = originalTitle;
+          targetPage.status = "reported page";
+          targetPage.title = "Sorry! Page reported";
+          targetPage.reportReason = reason;
+          targetPage.quarantineUntil = Date.now() + 48 * 60 * 60 * 1000;
+          persistState();
+
+          const selectedOpt = reportPageSelect.options[reportPageSelect.selectedIndex];
+          if (selectedOpt) selectedOpt.remove();
+          reportDetailsInput.value = "";
+
+          const issueUrl = buildIssueUrl(originalTitle, reason, details);
+          let emailLinkHtml = "";
+          if (CONTACT_EMAIL) {
+            const mailSubject = `[Nelvor Report] ${reason}: ${originalTitle}`;
+            const mailBody = `Reported Page: ${originalTitle}\nReason: ${reason}\n\nDetails:\n${details}`;
+            const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+            emailLinkHtml = ` or <a href="${mailtoUrl}" class="classic-link">Send via Email</a>`;
+          }
+
+          reportStatus.innerHTML = `
+            <strong>"Sorry! Page reported"</strong> — "${escapeHTML(originalTitle)}" is now in a local 48-hour quarantine.<br>
+            <strong>Important:</strong> To notify <strong>portalnelvor</strong> for permanent removal or legal review (copyright/defamation), click here:<br>
+            <a href="${issueUrl}" target="_blank" rel="noopener noreferrer" class="classic-link">Send Official Report via GitHub Issues</a>${emailLinkHtml}
+          `;
+          updateCurrentStatus();
+        });
+      }
+    }
+
+    function openRandomCommunityPage() {
+      showScreen("main");
+      const activeCommunity = nelvorData.filter((item) => item.isCommunity && !isPageReported(item));
+      const activeAll = nelvorData.filter((item) => !isPageReported(item));
+      const pool = activeCommunity.length > 0 ? activeCommunity : (activeAll.length > 0 ? activeAll : nelvorData);
+
+      const picked = pool[Math.floor(Math.random() * pool.length)];
+      const label = activeCommunity.length > 0
+        ? `Random Community Page — ${picked.theme}`
+        : `Random Page — ${picked.theme}`;
+      showResults([picked], label);
+    }
+
+    function openRecentPages() {
+      showScreen("main");
+      const communityPages = nelvorData.filter((item) => item.isCommunity);
+      if (communityPages.length > 0) {
+        showResults(communityPages, "Recent Community Pages");
+      } else {
+        showResults(nelvorData.slice(0, 5), "Recent Pages on Nelvor");
+      }
+    }
+
+    // Real URL hash router for all hyperlinks
+    function handleHashRoute() {
+      const hash = window.location.hash;
+
+      if (!hash || hash === "#home") {
+        showScreen("main");
+        updateCurrentStatus();
+        return;
+      }
+
+      if (hash === "#create") {
+        openCreatePageScreen();
+      } else if (hash === "#random") {
+        openRandomCommunityPage();
+      } else if (hash === "#recent") {
+        openRecentPages();
+      } else if (hash.startsWith("#topic-")) {
+        const topic = decodeURIComponent(hash.slice("#topic-".length));
+        if (topicsList.includes(topic)) {
+          openTopicFromLink(topic);
+        }
+      } else if (hash.startsWith("#page-")) {
+        const idx = Number(hash.slice("#page-".length));
+        if (!Number.isNaN(idx) && nelvorData[idx]) {
+          openSinglePageByIndex(idx);
+        }
+      } else {
+        const pageName = hash.slice(1);
+        const validInfo = ["terms", "report", "privacy", "disclaimer", "topics", "about", "history", "guidelines"];
+        if (validInfo.includes(pageName)) {
+          openInfoPage(pageName);
+        }
+      }
+    }
+
+    // Allow clicking Random Page again even when already on #random
+    randomNavLink.addEventListener("click", () => {
+      if (window.location.hash === "#random") {
+        openRandomCommunityPage();
+      }
+    });
+
+    window.addEventListener("hashchange", handleHashRoute);
+    window.addEventListener("popstate", handleHashRoute);
+
+    // Search events
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (searchInput.style.display === "none") {
+        showSearchBar();
+      } else {
+        runNormalSearch();
+      }
+    });
+
+    luckyBtn.addEventListener("click", () => {
+      sessionSearchCount += 1;
+      const query = searchInput.value.trim();
+      const theme = themeDropdown.value;
+      const matches = filterData(query, theme);
+
+      if (matches.length === 0) {
+        showResults([], `Try My Luck!${theme ? " (" + theme + ")" : ""}`);
+        return;
+      }
+
+      const picked = matches[Math.floor(Math.random() * matches.length)];
+      showResults([picked], `Try My Luck! — ${picked.theme}`);
+    });
+
+    themeDropdown.addEventListener("change", () => {
+      if (searchInput.style.display === "none") {
+        searchInput.value = "";
+        runNormalSearch();
+      } else if (themeDropdown.value !== "") {
+        runNormalSearch();
+      }
+    });
+
+    nelvorLogo.addEventListener("click", showSearchBar);
+    createLogo.addEventListener("click", () => returnToMain(true));
+    infoLogo.addEventListener("click", () => returnToMain(true));
+    backToNelvorBtn.addEventListener("click", () => returnToMain(true));
+    infoBackBtn.addEventListener("click", () => returnToMain(true));
+
+    // Enter name handler -> shows Welcome message + real hyperlink to create pages
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = signupNameInput.value.trim();
+      if (!name) {
+        signupStatus.textContent = "Please enter your name first.";
+        signupNameInput.focus();
+        return;
+      }
+
+      currentMemberName = name;
+      signupNameInput.value = "";
+
+      signupStatus.innerHTML = `
+        Welcome, ${escapeHTML(name)}!<br>
+        <a href="#create" class="classic-link">Click here to create pages</a>
+      `;
+    });
+
+    // Create Page handler -> adds community page without Author Name field
+    createPageForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = pageTitleInput.value.trim();
+      const topic = pageTopicSelect.value;
+      const rawContent = pageContentInput.value.trim();
+
+      if (!title || !rawContent) {
+        createPageStatus.textContent = "Please enter both a page title and page content.";
+        return;
+      }
+
+      if (rawContent.length > MAX_PAGE_CONTENT_CHARS) {
+        createPageStatus.textContent = `Page content is too long (maximum ${MAX_PAGE_CONTENT_CHARS.toLocaleString("en-US")} characters).`;
+        return;
+      }
+
+      const paragraphs = rawContent
+        .split(/\n+/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      nelvorData.unshift({
+        theme: topic,
+        title: title,
+        isCommunity: true,
+        paragraphs: paragraphs
+      });
+
+      const saved = persistState();
+      const communityTotal = nelvorData.filter((item) => item.isCommunity).length;
+      let saveNote = " It is saved in this browser, so it will still be here after you reload or close the page.";
+      if (!saved) {
+        saveNote = " Warning: your browser blocked saving, so this page will disappear when you reload or close the page.";
+      } else if (communityTotal > MAX_SAVED_COMMUNITY_PAGES) {
+        saveNote = ` Only your newest ${MAX_SAVED_COMMUNITY_PAGES} pages are kept in this browser.`;
+      }
+
+      createPageStatus.textContent = `Page "${title}" was created in ${topic}! You can now search for it on Nelvor or view it in Recent Pages or History.${saveNote}`;
+      pageTitleInput.value = "";
+      pageContentInput.value = "";
+      updateCurrentStatus();
+    });
+
+    // Initialize real status table and handle initial URL hash
+    updateCurrentStatus();
+    if (window.location.hash) {
+      handleHashRoute();
+    }
+  </script>
+</body>
+</html>
